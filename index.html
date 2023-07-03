@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="W-UA-Compatible" content="ie=edge">
+    <link rel = "stylesheet" href="menubar.css">
+    <title>Nav Bar test</title>
+
+<!---Java script code-->
+<script>
+    function displayFormData(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get form data
+        var formData = new FormData(document.getElementById("myForm"));
+
+        // Get all form entries
+        var entries = Array.from(formData.entries());
+
+        // Retrieve previous form data from local storage
+        var previousData = localStorage.getItem("formData");
+
+        var allEntries = [];
+        if (previousData) {
+            allEntries = JSON.parse(previousData);
+        }
+
+        // Add current form data to previous form data
+        allEntries.push(entries);
+
+        // Store updated form data in local storage
+        localStorage.setItem("formData", JSON.stringify(allEntries));
+
+        // Display all form data
+        var displayDiv = document.getElementById("displayDiv");
+        displayDiv.innerHTML = "";
+
+        for (var submission of allEntries) {
+            for (var entry of submission) {
+                var key = entry[0];
+                var value = entry[1];
+                displayDiv.innerHTML += "<p><strong>" + key + ":</strong> " + value + "</p>";
+            }
+            displayDiv.innerHTML += "<hr>";
+        }
+    }
+
+    // Display previous form submissions on page load
+    window.onload = function() {
+        var storedData = localStorage.getItem("formData");
+        if (storedData) {
+            var previousSubmissions = JSON.parse(storedData);
+
+            var displayDiv = document.getElementById("displayDiv");
+            displayDiv.innerHTML = "";
+
+            for (var submission of previousSubmissions) {
+                for (var entry of submission) {
+                    var key = entry[0];
+                    var value = entry[1];
+                    displayDiv.innerHTML += "<p><strong>" + key + ":</strong> " + value + "</p>";
+                }
+                displayDiv.innerHTML += "<hr>";
+            }
+        }
+    };
+
+    // to clear data need use  localStorage.clear()
+</script>
+</head>
+<body>
+
+<!---- NAVIGATION BAR-----> 
+    <header> 
+        <img class="logo" src="logo.PNG" alt="logo">
+        <nav>
+            <ul class="foodcategories">
+                <li><a href="snacks.html"></a>Snacks</li>
+                <li><a href="sweets.html"></a>Sweets</li>
+                <li><a href="drinks.html"></a>Drinks</li>
+            </ul>
+        </nav>
+        <input type = "text" placeholder="Search...">
+        <input type="submit" value="search" onclick="displayFormData(event)">
+
+    </header>
+
+    <h1>Chatbot enquiries</h1>
+    <form id="myForm">
+        <label for = "chatbot"></label>
+        <textarea id = "chatbot" name = "chatbot" rows = "8" required></textarea>
+        <input type="submit" value="Submit" onclick="displayFormData(event)">
+    </form>
+
+    <div id="displayDiv"></div>
+
+</body>
+
+<script id="648054c0a793612bf268eed1" src="https://dashboard.chatfuel.com/integration/entry-point.js" async defer></script>
+
+</html>
